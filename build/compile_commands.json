@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/afaradzhov/OBAnalizer/build",
+  "command": "/usr/bin/g++ -DOBAnalizer_EXPORTS  -g -fPIC -std=gnu++1y -o CMakeFiles/OBAnalizer.dir/src/OBAnalizer.cpp.o -c /home/afaradzhov/OBAnalizer/src/OBAnalizer.cpp",
+  "file": "/home/afaradzhov/OBAnalizer/src/OBAnalizer.cpp"
+},
+{
+  "directory": "/home/afaradzhov/OBAnalizer/build",
+  "command": "/usr/bin/g++   -g -std=gnu++1y -o CMakeFiles/ex01.dir/tests/source.cpp.o -c /home/afaradzhov/OBAnalizer/tests/source.cpp",
+  "file": "/home/afaradzhov/OBAnalizer/tests/source.cpp"
+}
+]

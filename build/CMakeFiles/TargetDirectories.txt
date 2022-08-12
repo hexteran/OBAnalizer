@@ -1,0 +1,4 @@
+/home/afaradzhov/OBAnalizer/build/CMakeFiles/OBAnalizer.dir
+/home/afaradzhov/OBAnalizer/build/CMakeFiles/ex01.dir
+/home/afaradzhov/OBAnalizer/build/CMakeFiles/edit_cache.dir
+/home/afaradzhov/OBAnalizer/build/CMakeFiles/rebuild_cache.dir
