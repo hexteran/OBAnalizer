@@ -64,7 +64,7 @@ CMAKE_BINARY_DIR = /home/afaradzhov/OBAnalizer/build
 
 # The main recursive "all" target.
 all: CMakeFiles/OBAnalizer.dir/all
-all: CMakeFiles/ex01.dir/all
+all: CMakeFiles/OBExtractor.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -73,7 +73,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/OBAnalizer.dir/clean
-clean: CMakeFiles/ex01.dir/clean
+clean: CMakeFiles/OBExtractor.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -103,30 +103,30 @@ CMakeFiles/OBAnalizer.dir/clean:
 .PHONY : CMakeFiles/OBAnalizer.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/ex01.dir
+# Target rules for target CMakeFiles/OBExtractor.dir
 
 # All Build rule for target.
-CMakeFiles/ex01.dir/all: CMakeFiles/OBAnalizer.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex01.dir/build.make CMakeFiles/ex01.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex01.dir/build.make CMakeFiles/ex01.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/afaradzhov/OBAnalizer/build/CMakeFiles --progress-num=3,4 "Built target ex01"
-.PHONY : CMakeFiles/ex01.dir/all
+CMakeFiles/OBExtractor.dir/all: CMakeFiles/OBAnalizer.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBExtractor.dir/build.make CMakeFiles/OBExtractor.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBExtractor.dir/build.make CMakeFiles/OBExtractor.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/afaradzhov/OBAnalizer/build/CMakeFiles --progress-num=3,4 "Built target OBExtractor"
+.PHONY : CMakeFiles/OBExtractor.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/ex01.dir/rule: cmake_check_build_system
+CMakeFiles/OBExtractor.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/afaradzhov/OBAnalizer/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ex01.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/OBExtractor.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/afaradzhov/OBAnalizer/build/CMakeFiles 0
-.PHONY : CMakeFiles/ex01.dir/rule
+.PHONY : CMakeFiles/OBExtractor.dir/rule
 
 # Convenience name for target.
-ex01: CMakeFiles/ex01.dir/rule
-.PHONY : ex01
+OBExtractor: CMakeFiles/OBExtractor.dir/rule
+.PHONY : OBExtractor
 
 # clean rule for target.
-CMakeFiles/ex01.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex01.dir/build.make CMakeFiles/ex01.dir/clean
-.PHONY : CMakeFiles/ex01.dir/clean
+CMakeFiles/OBExtractor.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBExtractor.dir/build.make CMakeFiles/OBExtractor.dir/clean
+.PHONY : CMakeFiles/OBExtractor.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

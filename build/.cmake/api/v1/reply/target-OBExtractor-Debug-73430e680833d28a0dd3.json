@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "/home/afaradzhov/OBAnalizer/lib/OBAnalizer.so"
+			"path" : "/home/afaradzhov/OBAnalizer/bin/OBExtractor"
 		}
 	],
 	"backtrace" : 1,
@@ -10,7 +10,8 @@
 	{
 		"commands" : 
 		[
-			"add_library"
+			"add_executable",
+			"target_link_libraries"
 		],
 		"files" : 
 		[
@@ -24,7 +25,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 7,
+				"line" : 13,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 14,
 				"parent" : 0
 			}
 		]
@@ -35,16 +42,10 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -fPIC"
+					"fragment" : "-g"
 				},
 				{
 					"fragment" : "-std=gnu++1y"
-				}
-			],
-			"defines" : 
-			[
-				{
-					"define" : "OBAnalizer_EXPORTS"
 				}
 			],
 			"language" : "CXX",
@@ -62,20 +63,40 @@
 			]
 		}
 	],
-	"id" : "OBAnalizer::@6890427a1f51a3e7e1df",
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "OBAnalizer::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "OBExtractor::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
 				"fragment" : "",
 				"role" : "flags"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/home/afaradzhov/OBAnalizer/lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "../lib/OBAnalizer.so",
+				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
 	},
-	"name" : "OBAnalizer",
-	"nameOnDisk" : "OBAnalizer.so",
+	"name" : "OBExtractor",
+	"nameOnDisk" : "OBExtractor",
 	"paths" : 
 	{
 		"build" : ".",
@@ -89,13 +110,6 @@
 			[
 				0
 			]
-		},
-		{
-			"name" : "Header Files",
-			"sourceIndexes" : 
-			[
-				1
-			]
 		}
 	],
 	"sources" : 
@@ -103,14 +117,9 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/OBAnalizer.cpp",
+			"path" : "src/BBOExtractor.cpp",
 			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"path" : "src/OBAnalizer.h",
-			"sourceGroupIndex" : 1
 		}
 	],
-	"type" : "SHARED_LIBRARY"
+	"type" : "EXECUTABLE"
 }

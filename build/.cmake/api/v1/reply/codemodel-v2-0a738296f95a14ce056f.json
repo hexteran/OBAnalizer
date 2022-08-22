@@ -41,15 +41,15 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "OBAnalizer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-OBAnalizer-Debug-0293a6b055cb90b3c2be.json",
+					"jsonFile" : "target-OBAnalizer-Debug-8948def2cae7f4bb098c.json",
 					"name" : "OBAnalizer",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "ex01::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ex01-Debug-b3838f1a7e32ecd9aab7.json",
-					"name" : "ex01",
+					"id" : "OBExtractor::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OBExtractor-Debug-73430e680833d28a0dd3.json",
+					"name" : "OBExtractor",
 					"projectIndex" : 0
 				}
 			]

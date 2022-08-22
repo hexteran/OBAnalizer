@@ -1,1 +1,1 @@
-/usr/bin/g++ -g CMakeFiles/ex01.dir/tests/source.cpp.o -o ../tests/bin/ex01  -Wl,-rpath,/home/afaradzhov/OBAnalizer/lib ../lib/OBAnalizer.so 
+/usr/bin/g++ -g CMakeFiles/ex01.dir/tests/source.cpp.o -o ../bin/ex01  -Wl,-rpath,/home/afaradzhov/OBAnalizer/lib ../lib/OBAnalizer.so 

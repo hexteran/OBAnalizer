@@ -130,17 +130,41 @@ OBAnalizer/fast:
 .PHONY : OBAnalizer/fast
 
 #=============================================================================
-# Target rules for targets named ex01
+# Target rules for targets named OBExtractor
 
 # Build rule for target.
-ex01: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ex01
-.PHONY : ex01
+OBExtractor: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 OBExtractor
+.PHONY : OBExtractor
 
 # fast build rule for target.
-ex01/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex01.dir/build.make CMakeFiles/ex01.dir/build
-.PHONY : ex01/fast
+OBExtractor/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBExtractor.dir/build.make CMakeFiles/OBExtractor.dir/build
+.PHONY : OBExtractor/fast
+
+src/BBOExtractor.o: src/BBOExtractor.cpp.o
+.PHONY : src/BBOExtractor.o
+
+# target to build an object file
+src/BBOExtractor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBExtractor.dir/build.make CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.o
+.PHONY : src/BBOExtractor.cpp.o
+
+src/BBOExtractor.i: src/BBOExtractor.cpp.i
+.PHONY : src/BBOExtractor.i
+
+# target to preprocess a source file
+src/BBOExtractor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBExtractor.dir/build.make CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.i
+.PHONY : src/BBOExtractor.cpp.i
+
+src/BBOExtractor.s: src/BBOExtractor.cpp.s
+.PHONY : src/BBOExtractor.s
+
+# target to generate assembly for a file
+src/BBOExtractor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBExtractor.dir/build.make CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.s
+.PHONY : src/BBOExtractor.cpp.s
 
 src/OBAnalizer.o: src/OBAnalizer.cpp.o
 .PHONY : src/OBAnalizer.o
@@ -166,30 +190,6 @@ src/OBAnalizer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/OBAnalizer.dir/build.make CMakeFiles/OBAnalizer.dir/src/OBAnalizer.cpp.s
 .PHONY : src/OBAnalizer.cpp.s
 
-tests/source.o: tests/source.cpp.o
-.PHONY : tests/source.o
-
-# target to build an object file
-tests/source.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex01.dir/build.make CMakeFiles/ex01.dir/tests/source.cpp.o
-.PHONY : tests/source.cpp.o
-
-tests/source.i: tests/source.cpp.i
-.PHONY : tests/source.i
-
-# target to preprocess a source file
-tests/source.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex01.dir/build.make CMakeFiles/ex01.dir/tests/source.cpp.i
-.PHONY : tests/source.cpp.i
-
-tests/source.s: tests/source.cpp.s
-.PHONY : tests/source.s
-
-# target to generate assembly for a file
-tests/source.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ex01.dir/build.make CMakeFiles/ex01.dir/tests/source.cpp.s
-.PHONY : tests/source.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -199,13 +199,13 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... OBAnalizer"
-	@echo "... ex01"
+	@echo "... OBExtractor"
+	@echo "... src/BBOExtractor.o"
+	@echo "... src/BBOExtractor.i"
+	@echo "... src/BBOExtractor.s"
 	@echo "... src/OBAnalizer.o"
 	@echo "... src/OBAnalizer.i"
 	@echo "... src/OBAnalizer.s"
-	@echo "... tests/source.o"
-	@echo "... tests/source.i"
-	@echo "... tests/source.s"
 .PHONY : help
 
 

@@ -24,6 +24,8 @@ file = open("../tests/datasets/serialized_deribit.bin", "wb")
 print(local_timestamp[0])
 print(struct.pack('l', local_timestamp[0])[0])
 for i in range(len(price)):
+    if i == 2133:
+       print(struct.pack('f', price[i]))
     file.write(struct.pack('l', local_timestamp[i]))
     file.write(struct.pack('l', exchange_timestamp[i]))
     file.write(struct.pack('f', price[i]))

@@ -1,7 +1,8 @@
-CMakeFiles/ex01.dir/tests/source.cpp.o: \
- /home/afaradzhov/OBAnalizer/tests/source.cpp /usr/include/stdc-predef.h \
- /home/afaradzhov/OBAnalizer/tests/../src/Serializer.hpp \
- /home/afaradzhov/OBAnalizer/tests/../src/OBAnalizer.h \
+CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.o: \
+ /home/afaradzhov/OBAnalizer/src/BBOExtractor.cpp \
+ /usr/include/stdc-predef.h \
+ /home/afaradzhov/OBAnalizer/src/BBOExtractor.hpp \
+ /home/afaradzhov/OBAnalizer/src/OBAnalizer.h \
  /usr/include/c++/4.8.2/iostream \
  /usr/include/c++/4.8.2/x86_64-redhat-linux/bits/c++config.h \
  /usr/include/bits/wordsize.h \

@@ -1,3 +1,3 @@
 file(REMOVE_RECURSE
-  "libOBAnalizer.a"
+  "OBAnalizer.a"
 )

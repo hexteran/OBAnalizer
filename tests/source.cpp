@@ -1,4 +1,4 @@
-#include "../src/Serializer.hpp"
+#include "../src/BBOExtractor.hpp"
 #include <string>
 
 struct Strategy : public Worker
@@ -30,10 +30,15 @@ struct DeribitStrategy : public Worker
 //this is the strategy to collect bbo on real data
 {
     fstream output;
-    DeribitStrategy(const IncrementalData& incremental_data) : Worker(incremental_data), 
-                                                               output("/home/afaradzhov/OBAnalizer/tests/datasets/output.csv", ios::out)
+    DeribitStrategy(const IncrementalData& incremental_data, const string& filename) : Worker(incremental_data), 
+                                                               output(filename, ios::out)
     {
         output<<"local_timestamp,exchange_timestamp,bid_price,bid_amount,ask_price,ask_amount,spread\n";
+    }
+    void custom_run()
+    {
+        std::cout<<"running\n";
+        run();
     }
     virtual void on_new_step()
     {
@@ -48,21 +53,53 @@ struct DeribitStrategy : public Worker
     };
 }; 
 
-int test_on_deribit()
+int test_on_deribit(const string& input_fname, const string& output_fname,  char ignore_nonexs = false)
+{
+    fstream input;
+    IncrementalData incremental_data(0.001);
+    input.open(input_fname, ios::in | std::ios::binary);
+    std::cout<<"Input file has been opened \n";
+    int i = 0;
+    while (!input.eof()){
+        if (i == 2133)
+            std::cout<<"A";
+        if (ignore_nonexs){
+            try
+            {
+                read_serialized_data(input, incremental_data);
+            }
+            catch (const std::logic_error& e)
+            {
+                cout<<"Error \""<<e.what()<<"\" has been ignored\n";
+            };
+        }
+        else
+        {
+            read_serialized_data(input, incremental_data);
+        }
+        ++i;
+    };
+    DeribitStrategy strat(incremental_data, output_fname);
+    input.close();
+    strat.custom_run();
+    return 1;    
+};
+
+void test_roq_data()
 {
     fstream input;
     IncrementalData incremental_data(0.001);
     input.open("/home/afaradzhov/OBAnalizer/tests/datasets/serialized_deribit.bin", ios::in | std::ios::binary);
+    std::cout<<"Input file has been opened \n";
     int i = 0;
     while (!input.eof()){
         read_serialized_data(input, incremental_data);
         ++i;
     };
-    DeribitStrategy strat(incremental_data);
+    DeribitStrategy strat(incremental_data, "/home/afaradzhov/OBAnalizer/python/output_tardis.csv");
     input.close();
-    strat.run();
-    return 1;    
-};
+    strat.custom_run();
+}
 
 int insert_unique_new_undefined_side()
 {
@@ -278,7 +315,7 @@ int unique_insert_bid()
     return 0;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     //unique_insert_ask();
     //unique_insert_bid();
@@ -289,6 +326,23 @@ int main()
     //change_amount_bid();
     //change_amount_bid();
     //insert_unique_new_undefined_side();*/
-    test_on_deribit();
+    /*argc = 3;
+    char in[] = "/home/afaradzhov/OBAnalizer/python/serialized_deribit_roq.bin";
+    char out[] = "/home/afaradzhov/OBAnalizer/tests/datasets/output_deribit_roq_mbp_deribit.csv";
+    char param3[] = "ignore_nonexs1";
+    argv[1]=in;
+    argv[2]=out;
+    argv[3]= param3;
+    if (argc==3)
+            test_on_deribit(argv[1], argv[2], false);
+    else if(argc == 4 && string(argv[3])=="ignore_nonexs")
+            test_on_deribit(argv[1], argv[2], true);
+        else 
+        {
+            std::cout<<"Not enough arguments";
+        }*/
+
+    //test_roq_data();
+    test_on_deribit("/home/afaradzhov/OBAnalizer/tests/datasets/serialized_mbp_deribit_lon.bin", "/home/afaradzhov/OBAnalizer/tests/datasets/output_mbp_deribit_lon.csv");
     return 0;
 }

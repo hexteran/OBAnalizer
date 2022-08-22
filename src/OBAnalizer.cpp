@@ -23,19 +23,21 @@ void IncrementalData::delete_last_row()
     --m_size;
 };
 
-void OrderBookSnapshot::insert_update(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side)
+void OrderBookSnapshot::insert_update(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, bool is_snapshot)
 {
     m_local_timestamp = local_timestamp;
     m_exchange_timestmap = exchange_timestamp;
+    ++m_incremental_index;
     switch(side)
     {
-        case BID:insert_into_bid(price, amount); break;
-        case ASK:insert_into_ask(price, amount); break;
-        default: throw std::invalid_argument("Unknown update side");
+        case BID:insert_into_bid(price, amount, is_snapshot); break;
+        case ASK:insert_into_ask(price, amount, is_snapshot); break;
+        default: throw OBException("Update side is unknown", m_local_timestamp, m_exchange_timestmap,
+                                m_incremental_index, price, amount, Exception_Type::Unknown_update_side);
     };
 };
 
-void OrderBookSnapshot::insert_into_bid(Price price, Amount amount)
+void OrderBookSnapshot::insert_into_bid(Price price, Amount amount, bool is_snapshot)
 {
     if(amount == 0)
     {
@@ -51,8 +53,9 @@ void OrderBookSnapshot::insert_into_bid(Price price, Amount amount)
                     m_bidside.erase_after(prev);
                 return;
             }
-            else if((prev->first > price) && (it->first < price)){;
-                throw std::logic_error("Nonexistent level has been deleted");};
+            else if((prev->first > price) && (it->first < price) && (!is_snapshot))
+                throw OBException("Nonexistent level has been deleted", m_local_timestamp, m_exchange_timestmap,
+                                m_incremental_index, price, amount, Exception_Type::Nonexistent_level);
             prev = it;                
         };
         return;
@@ -88,7 +91,7 @@ void OrderBookSnapshot::insert_into_bid(Price price, Amount amount)
     };
 };
 
-void OrderBookSnapshot::insert_into_ask(Price price, Amount amount)
+void OrderBookSnapshot::insert_into_ask(Price price, Amount amount, bool is_snapshot)
 {
     if(amount == 0)
     {
@@ -104,8 +107,9 @@ void OrderBookSnapshot::insert_into_ask(Price price, Amount amount)
                     m_askside.erase_after(prev);
                 return;
             }
-            else if((prev->first < price) && (it->first > price))
-                throw std::logic_error("Nonexistent level has been deleted");
+            else if((prev->first < price) && (it->first > price) && (!is_snapshot))
+                throw OBException("Nonexistent level has been deleted", m_local_timestamp, m_exchange_timestmap,
+                                m_incremental_index, price, amount, Exception_Type::Nonexistent_level);
             prev = it;                
         };
         return;
@@ -174,7 +178,8 @@ void Worker::m_step_forward()
                                 m_incremental_data.exchange_timestamp(m_incremental_index), 
                                 m_incremental_data.price(m_incremental_index), 
                                 m_incremental_data.amount(m_incremental_index), 
-                                m_incremental_data.side(m_incremental_index));
+                                m_incremental_data.side(m_incremental_index),
+                                m_incremental_data.is_snapshot(m_incremental_index));
     ++m_incremental_index; 
     for (; (m_incremental_index < m_incremental_data.size()) && (m_incremental_data.local_timestamp(m_incremental_index-1) == m_incremental_data.local_timestamp(m_incremental_index)); ++m_incremental_index)
     {
@@ -182,7 +187,8 @@ void Worker::m_step_forward()
                                     m_incremental_data.exchange_timestamp(m_incremental_index), 
                                     m_incremental_data.price(m_incremental_index), 
                                     m_incremental_data.amount(m_incremental_index), 
-                                    m_incremental_data.side(m_incremental_index));
+                                    m_incremental_data.side(m_incremental_index),
+                                    m_incremental_data.is_snapshot(m_incremental_index));
     };
     on_new_step();
 };

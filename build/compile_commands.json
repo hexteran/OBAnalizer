@@ -6,7 +6,7 @@
 },
 {
   "directory": "/home/afaradzhov/OBAnalizer/build",
-  "command": "/usr/bin/g++   -g -std=gnu++1y -o CMakeFiles/ex01.dir/tests/source.cpp.o -c /home/afaradzhov/OBAnalizer/tests/source.cpp",
-  "file": "/home/afaradzhov/OBAnalizer/tests/source.cpp"
+  "command": "/usr/bin/g++   -g -std=gnu++1y -o CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.o -c /home/afaradzhov/OBAnalizer/src/BBOExtractor.cpp",
+  "file": "/home/afaradzhov/OBAnalizer/src/BBOExtractor.cpp"
 }
 ]
