@@ -3,6 +3,10 @@
 #include <iostream>
 #include <vector>
 #include <forward_list>
+#include <list>
+#include <map>
+#include <string>
+#include <tuple>
 #include <stdexcept>
 #include <limits>
 
@@ -17,8 +21,27 @@ typedef float Price;
 typedef float Amount;
 typedef char Side;
 typedef int Price_Level;
+typedef std::string StringID;
+typedef std::string Symbol;
+//typedef tuple<Price,vector<tuple<Amount,StringID>>> OrderBucket; 
 
 enum Exception_Type{Nonexistent_level, Not_sorted_incrementals, Unknown_update_side};
+
+struct Order
+{
+    StringID orderID;
+    Price price;
+    Amount amount;
+    Order(Price prc, Amount amnt, StringID orderID):price(prc), amount(amnt), orderID(orderID){};
+};
+
+struct OrderBucket
+{
+    Price price;
+    list<Order> orders; 
+    OrderBucket(Price prc):price(prc){};
+    OrderBucket():price(0){};
+};
 
 class OBException : exception
 {
@@ -60,7 +83,7 @@ class EXPORT IncrementalData
     This is the class to work with raw incremental data
 */
 {
-private:
+protected:
     vector<Timestamp> m_local_timestamp;
     vector<Timestamp> m_exchange_timestamp;
     vector<Price> m_price;
@@ -69,7 +92,7 @@ private:
     vector<bool> m_snapshot;
     int m_size;
 public:
-    IncrementalData(Price price_step): m_size(0){};
+    IncrementalData(): m_size(0){};
     void add_row(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, bool snapshot);
     void delete_last_row();
     Timestamp local_timestamp(int i) const { return m_local_timestamp[i];};
@@ -81,20 +104,45 @@ public:
     long size() const { return m_size;}; 
 };
 
+class EXPORT L3OrderBookSnapshot
+/*
+    Objects of this class store immidiate snapshots made of separate orders
+*/
+{
+public:
+    Price m_price_step;
+    Price m_min_price;    
+    Timestamp m_local_timestamp;
+    Timestamp m_exchange_timestmap;
+    std::list<OrderBucket> m_bidside, m_askside;
+    std::map<StringID, OrderBucket&> m_askside_map, m_bidside_map; 
+    int m_bidside_size, m_askside_size, m_incremental_index;
+//public:
+    L3OrderBookSnapshot(): m_bidside_size(0), m_askside_size(0) {};
+    Timestamp get_local_timestamp() const {return m_local_timestamp; };
+    Timestamp get_exchange_timestamp() const {return m_exchange_timestmap; };
+    bool get_order_bucket_by_level(Price_Level level, char side, OrderBucket *result);
+    int get_bid_size() const {return m_bidside_size;};
+    int get_ask_size() const {return m_askside_size;};
+    bool new_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, StringID orderID);
+    bool cancel_order(StringID orderID);
+    bool change_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, StringID orderID);
+};
+
 class EXPORT OrderBookSnapshot
 /*
     Objects of this class store immidiate snapshots
 */
 {
-private:
+protected:
     Price m_price_step;
     Price m_min_price;    
     Timestamp m_local_timestamp;
     Timestamp m_exchange_timestmap;
     forward_list<pair<Price,Amount>> m_bidside, m_askside;
     int m_bidside_size, m_askside_size, m_incremental_index;
-    void insert_into_bid(Price price, Amount amount, bool is_snapshot);
-    void insert_into_ask(Price price, Amount amount, bool is_snapshot);
+    virtual void insert_into_bid(Price price, Amount amount, bool is_snapshot);
+    virtual void insert_into_ask(Price price, Amount amount, bool is_snapshot);
     void move_bid_after_ask();
 public:
     OrderBookSnapshot(): m_bidside_size(0), m_askside_size(0) {};

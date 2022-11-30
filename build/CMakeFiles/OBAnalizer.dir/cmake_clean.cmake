@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "../lib/OBAnalizer.pdb"
-  "../lib/OBAnalizer.so"
   "CMakeFiles/OBAnalizer.dir/src/OBAnalizer.cpp.o"
   "CMakeFiles/OBAnalizer.dir/src/OBAnalizer.cpp.o.d"
+  "OBAnalizer.a"
+  "OBAnalizer.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

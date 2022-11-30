@@ -92,7 +92,7 @@ OBExtractor_EXTERNAL_OBJECTS =
 
 ../bin/OBExtractor: CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.o
 ../bin/OBExtractor: CMakeFiles/OBExtractor.dir/build.make
-../bin/OBExtractor: ../lib/OBAnalizer.so
+../bin/OBExtractor: OBAnalizer.a
 ../bin/OBExtractor: CMakeFiles/OBExtractor.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/afaradzhov/OBAnalizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ../bin/OBExtractor"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/OBExtractor.dir/link.txt --verbose=$(VERBOSE)

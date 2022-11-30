@@ -43,6 +43,7 @@
         "utility": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp",
-        "forward_list": "cpp"
+        "forward_list": "cpp",
+        "string": "cpp"
     }
 }

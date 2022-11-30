@@ -1,1 +1,2 @@
-/usr/bin/g++ -fPIC -g -shared -Wl,-soname,OBAnalizer.so -o ../lib/OBAnalizer.so CMakeFiles/OBAnalizer.dir/src/OBAnalizer.cpp.o 
+/usr/bin/ar qc OBAnalizer.a CMakeFiles/OBAnalizer.dir/src/OBAnalizer.cpp.o
+/usr/bin/ranlib OBAnalizer.a

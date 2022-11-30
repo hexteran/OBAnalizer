@@ -70,7 +70,7 @@ void run(BBOCollector& strat, bool ignore_nonexistent)
 void process_file(string input_fname, string output_fname, bool ignore_nonexistent = false)
 {
     fstream input;
-    IncrementalData incremental_data(0.001);
+    IncrementalData incremental_data;
     input.open(input_fname, ios::in | std::ios::binary);
     if (!input.is_open())
     {

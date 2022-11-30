@@ -1,1 +1,1 @@
-/usr/bin/g++ -g CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.o -o ../bin/OBExtractor  -Wl,-rpath,/home/afaradzhov/OBAnalizer/lib ../lib/OBAnalizer.so 
+/usr/bin/g++ -g CMakeFiles/OBExtractor.dir/src/BBOExtractor.cpp.o -o ../bin/OBExtractor  OBAnalizer.a 

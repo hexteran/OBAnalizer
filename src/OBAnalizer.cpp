@@ -1,8 +1,8 @@
 #include "OBAnalizer.h"
 void IncrementalData::add_row(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, bool snapshot)
 {
-    if ((m_local_timestamp.size()>0) && (local_timestamp<m_local_timestamp[m_local_timestamp.size()-1]))
-        throw std::invalid_argument( "local_timestmaps are not sorted");
+    //if ((m_local_timestamp.size()>0) && (local_timestamp<m_local_timestamp[m_local_timestamp.size()-1]))
+    //    throw std::invalid_argument( "local_timestmaps are not sorted");
     m_local_timestamp.push_back(local_timestamp);
     m_exchange_timestamp.push_back(exchange_timestamp);
     m_price.push_back(price);
@@ -21,6 +21,180 @@ void IncrementalData::delete_last_row()
     m_side.pop_back();
     m_snapshot.pop_back();
     --m_size;
+};
+
+bool L3OrderBookSnapshot::get_order_bucket_by_level(Price_Level level, char side, OrderBucket* result)
+{
+    if (side==BID)
+    {
+        if (level > m_bidside_size-1)
+            return false;
+        int l = 0;
+        for(auto it = m_bidside.begin(); it != m_bidside.end(); it++)
+        {
+            if (l==level)
+            {
+                *result = (*it);
+                return true;
+            };
+            ++l;
+        };
+    };   
+    if (side==ASK)
+    {
+        if (level > m_askside_size-1)
+            return false;
+        int l = 0;
+        for(auto it = m_askside.begin(); it != m_askside.end(); it++)
+        {
+            if (l==level)
+            {
+                *result = (*it);
+                return true;
+            };
+            ++l;
+        };
+    };
+    return false;
+};
+
+bool L3OrderBookSnapshot::new_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, StringID orderID)
+{
+    m_local_timestamp = local_timestamp;
+    m_exchange_timestmap = exchange_timestamp;
+    if (side==BID)
+    {
+        if ((m_bidside_map.find(orderID)!=m_bidside_map.end()) || (m_askside_map.find(orderID)!=m_askside_map.end())) return false;
+        if (m_bidside.begin()==m_bidside.end())
+        {
+            m_bidside_size++;
+            auto it = m_bidside.begin();
+            m_bidside.insert(it, OrderBucket(price));
+            it--;
+            it->orders.push_back(Order(price, amount, orderID));
+            m_bidside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+            return true;
+        }
+        for(auto it = m_bidside.begin(); it != m_bidside.end(); it++)
+        {
+
+            if (it->price > price)
+                continue;
+            if (it->price == price)
+            {
+                it->orders.push_back(Order(price, amount, orderID));
+                m_bidside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+                return true;
+            };
+            if (it->price < price)
+            {
+                m_bidside_size++;
+                m_bidside.insert(it, OrderBucket(price));
+                it--;
+                it->orders.push_back(Order(price, amount, orderID));
+                m_bidside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+                return true;
+            };
+        };
+        m_bidside_size++;
+        auto it = m_bidside.end();
+        m_bidside.insert(it, OrderBucket(price));
+        it--;
+        it->orders.push_back(Order(price, amount, orderID));
+        m_bidside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+        return true;
+    };
+    if (side==ASK)
+    {
+        if ((m_bidside_map.find(orderID)!=m_bidside_map.end()) || (m_askside_map.find(orderID)!=m_askside_map.end())) return false;
+        if (m_askside.begin()==m_askside.end())
+        {
+            m_askside_size++;
+            auto it = m_askside.begin();
+            m_askside.insert(it, OrderBucket(price));
+            it--;
+            it->orders.push_back(Order(price, amount, orderID));
+            m_askside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+            return true;
+        }
+        for(auto it = m_askside.begin(); it != m_askside.end(); it++)
+        {
+
+            if (it->price < price)
+                continue;
+            if (it->price == price)
+            {
+                it->orders.push_back(Order(price, amount, orderID));
+                m_askside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+                return true;
+            };
+            if (it->price > price)
+            {
+                m_askside_size++;
+                m_askside.insert(it, OrderBucket(price));
+                it--;
+                it->orders.push_back(Order(price, amount, orderID));
+                m_askside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+                return true;
+            };
+        };
+        m_askside_size++;
+        auto it = m_askside.end();
+        m_askside.insert(it, OrderBucket(price));
+        it--;
+        it->orders.push_back(Order(price, amount, orderID));
+        m_askside_map.insert(std::pair<StringID, OrderBucket&>(orderID, *it));
+        return true;
+    };
+};
+
+bool L3OrderBookSnapshot::cancel_order(StringID orderID)
+{
+    auto result = m_bidside_map.find(orderID);
+    if (result != m_bidside_map.end())
+        for (auto it = result->second.orders.begin(); it != result->second.orders.end(); it++)
+            if (it->orderID == orderID)
+            {
+                result->second.orders.erase(it);
+                if (result->second.orders.empty())
+                    for(auto to_delete = m_bidside.begin(); to_delete!=m_bidside.end(); to_delete++)
+                        if (to_delete->price == result->second.price)
+                        {
+                            m_bidside.erase(to_delete);
+                            m_bidside_map.erase(result);
+                            return true;
+                        };
+                m_bidside_map.erase(result);
+                return true;
+            };
+    
+    result = m_askside_map.find(orderID);
+    if (result != m_askside_map.end())
+        for (auto it = result->second.orders.begin(); it != result->second.orders.end(); it++)
+           if (it->orderID == orderID)
+            {
+                result->second.orders.erase(it);
+                if (result->second.orders.empty())
+                    for(auto to_delete = m_askside.begin(); to_delete!=m_askside.end(); to_delete++)
+                        if (to_delete->price == result->second.price)
+                        {
+                            m_askside.erase(to_delete);
+                            m_askside_map.erase(result);
+                            return true;
+                        };
+                m_askside_map.erase(result);
+                return true;
+            };
+    //if ()*/
+    return false;
+};
+
+bool L3OrderBookSnapshot::change_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, StringID orderID)
+{
+    //тут может быть проблема если удастся снять ордер, а поставить новый не получится
+    //но ошибка при постановке на данный момент есть только если orderID дублируется,
+    //так что теоретически такая проблема исключена
+    return cancel_order(orderID) && new_order(local_timestamp, exchange_timestamp, price, amount, side, orderID);
 };
 
 void OrderBookSnapshot::insert_update(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, bool is_snapshot)
