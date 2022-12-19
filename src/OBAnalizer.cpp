@@ -197,6 +197,81 @@ bool L3OrderBookSnapshot::change_order(Timestamp local_timestamp, Timestamp exch
     return cancel_order(orderID) && new_order(local_timestamp, exchange_timestamp, price, amount, side, orderID);
 };
 
+std::vector<std::pair<StringID, Amount>> L3Matcher::new_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char aggressor_side)
+{
+    std::vector<std::pair<StringID, Amount>> result;
+    if (aggressor_side == ASK)
+    {
+        for(auto bucket = m_snapshot.m_bidside.begin(); bucket != m_snapshot.m_bidside.end(); bucket++)
+        {
+            if ((bucket->price < price) || (amount == 0))
+                return result;
+            for (auto order = bucket->orders.begin(); order != bucket->orders.end(); order++)
+            {
+                if (order->amount > amount)
+                {
+                    order->amount -= amount;
+                    amount = 0;
+                    result.push_back(std::pair<StringID, Amount>(order->orderID, amount));
+                }
+                else
+                {
+                    amount -= order->amount;
+                    result.push_back(std::pair<StringID, Amount>(order->orderID, order->amount));
+                    order = bucket->orders.erase(order);
+                    order--;
+                };
+                if (amount == 0)
+                    break;
+            };
+            if (bucket->orders.empty())
+            {
+                auto tmp = bucket;
+                bucket = m_snapshot.m_bidside.erase(tmp);
+                bucket--;
+            };
+            if (amount == 0)
+                break;
+        };
+        return result;
+    };
+    if (aggressor_side == BID)
+        {
+            for(auto bucket = m_snapshot.m_askside.begin(); bucket != m_snapshot.m_askside.end(); bucket++)
+            {
+                if ((bucket->price > price) || (amount == 0))
+                    return result;
+                for (auto order = bucket->orders.begin(); order != bucket->orders.end(); order++)
+                {
+                    if (order->amount > amount)
+                    {
+                        order->amount -= amount;
+                        amount = 0;
+                        result.push_back(std::pair<StringID, Amount>(order->orderID, amount));
+                    }
+                    else
+                    {
+                        amount -= order->amount;
+                        result.push_back(std::pair<StringID, Amount>(order->orderID, order->amount));
+                        order = bucket->orders.erase(order);
+                        order--;
+                    };
+                    if (amount == 0)
+                        break;
+                };
+                if (bucket->orders.empty())
+                {
+                    auto tmp = bucket;
+                    bucket = m_snapshot.m_bidside.erase(tmp);
+                    bucket--;
+                };
+                if (amount == 0)
+                    break;
+            };
+            return result;
+    };
+};
+
 void OrderBookSnapshot::insert_update(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, bool is_snapshot)
 {
     m_local_timestamp = local_timestamp;

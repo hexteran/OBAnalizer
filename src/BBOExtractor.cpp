@@ -106,12 +106,41 @@ void test3(){
         std::cout<<"\n";
     };
     int l=10;
-}
+};
+
+void test4(){
+    L3OrderBookSnapshot ob;
+    char side = ASK;
+    ob.new_order(1,1,100,13, side, "1a");
+    ob.new_order(2,1,101,10, side, "1b");
+    ob.new_order(3,1,100,12, side, "2a");
+    ob.new_order(4,1,100,11, side, "3a");
+    ob.new_order(5,1,99,10, side, "1c");
+    ob.new_order(6,1,100,14, side, "2b");
+    ob.new_order(7,1,101,10, side, "3b");
+    ob.new_order(8,1,99,10, side, "2c");
+    ob.new_order(9,1,99,10, side, "3c");
+    L3Matcher matcher(ob);
+    matcher.new_order(10, 1, 102, 185, 1);
+    OrderBucket first;
+    for (int i = 0; ob.get_order_bucket_by_level(i, side, &first);i++)
+    {
+        std::cout<<i<<"- "<<(first).price<<":: ";
+        for(auto it = (first).orders.begin(); it!=(first).orders.end(); it++)
+        {
+            std::cout<<it->amount<<"-"<<it->orderID<<' ';
+        };
+        std::cout<<"\n";
+    };
+    int l=10;
+};
+
 int main(int argc, char *argv[])
 {
-    //parse_cmd(argc, argv);
+    parse_cmd(argc, argv);
     //test1();
     //test2();
-    test3();
+    //test3();
+    //test4();
     return 0;
 };

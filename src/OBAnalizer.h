@@ -109,7 +109,7 @@ class EXPORT L3OrderBookSnapshot
     Objects of this class store immidiate snapshots made of separate orders
 */
 {
-public:
+protected:
     Price m_price_step;
     Price m_min_price;    
     Timestamp m_local_timestamp;
@@ -117,7 +117,7 @@ public:
     std::list<OrderBucket> m_bidside, m_askside;
     std::map<StringID, OrderBucket&> m_askside_map, m_bidside_map; 
     int m_bidside_size, m_askside_size, m_incremental_index;
-//public:
+public:
     L3OrderBookSnapshot(): m_bidside_size(0), m_askside_size(0) {};
     Timestamp get_local_timestamp() const {return m_local_timestamp; };
     Timestamp get_exchange_timestamp() const {return m_exchange_timestmap; };
@@ -127,6 +127,16 @@ public:
     bool new_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, StringID orderID);
     bool cancel_order(StringID orderID);
     bool change_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char side, StringID orderID);
+    friend class L3Matcher;
+};
+
+class L3Matcher
+{
+protected:
+    L3OrderBookSnapshot& m_snapshot;
+public:
+    L3Matcher(L3OrderBookSnapshot& snapshot): m_snapshot(snapshot){};
+    virtual std::vector<std::pair<StringID, Amount>> new_order(Timestamp local_timestamp, Timestamp exchange_timestamp, Price price, Amount amount, char aggressor_side);
 };
 
 class EXPORT OrderBookSnapshot
